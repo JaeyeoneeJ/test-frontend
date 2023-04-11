@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import UpdateModal from "./UpdateModal";
@@ -39,7 +39,7 @@ const UserList = ({ userList, setUserList }) => {
 
   const getUserList = async () => {
     try {
-      const { data } = await axios.get(`/api/user`);
+      const { data } = await axios.get(`${process.env.REACT_APP_URL}/user`);
       setUserList(data);
     } catch (e) {
       console.log(e);
@@ -49,7 +49,9 @@ const UserList = ({ userList, setUserList }) => {
   const deleteUser = async (accountId) => {
     if (window.confirm(`${accountId}를 삭제하시겠습니까?`)) {
       try {
-        const { data } = await axios.delete(`/api/user/${accountId}`);
+        const { data } = await axios.delete(
+          `${process.env.REACT_APP_URL}/user/${accountId}`
+        );
         setUserList(data);
 
         window.alert(`${accountId}가 삭제되었습니다.`);

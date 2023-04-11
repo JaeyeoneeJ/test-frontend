@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import GetOneUser from "./Pages/GetOneUser";
 import UserList from "./Pages/UserList";
 import SignUpModal from "./Pages/SignUpModal";
@@ -7,6 +6,7 @@ import SignUpModal from "./Pages/SignUpModal";
 function App() {
   const [onSignUp, setOnSignUp] = useState(false);
   const [userList, setUserList] = useState([]);
+  console.log(process.env.REACT_APP_URL);
 
   return (
     <>

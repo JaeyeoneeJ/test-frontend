@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -41,7 +41,9 @@ const GetOneUser = () => {
 
   const getOneUser = async () => {
     try {
-      const { data } = await axios.get(`/api/user/${value}`);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_URL}/user/${value}`
+      );
       setUser(data);
     } catch (e) {
       console.log(e);

@@ -80,7 +80,7 @@ const SignUpModal = ({ setOnSignUp, userList, setUserList }) => {
         age: userState.age,
       };
       console.log(requestBody);
-      const { data } = await axios.post(`/api/user`, requestBody);
+      const { data } = await axios.post(`/user`, requestBody);
       console.log("data: ", data);
       setUserList([...userList, data]);
       window.alert(`${userState.accountId}의 가입이 완료되었습니다.`);

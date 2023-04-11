@@ -88,7 +88,7 @@ const UpdateModal = ({
       };
       console.log(requestBody);
       const { data } = await axios.put(
-        `/api/user/${requestBody.id}`,
+        `${process.env.REACT_APP_URL}/user/${requestBody.id}`,
         requestBody
       );
       console.log("update data: ", data);
