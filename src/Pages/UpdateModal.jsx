@@ -107,12 +107,6 @@ const UpdateModal = ({
       window.alert(`${updateUserState.accountId}의 수정이 완료되었습니다.`);
       setOnUpdateModal(false);
     } catch (e) {
-      if (
-        e.response.data.status === 500 &&
-        e.response.data.message === "AccountId is duplicated"
-      ) {
-        window.alert("중복된 Account ID 입니다. 다시 입력해주세요.");
-      }
       console.log(e);
     }
   };

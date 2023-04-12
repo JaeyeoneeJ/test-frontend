@@ -89,11 +89,7 @@ const SignUpModal = ({ setOnSignUp, userList, setUserList }) => {
       window.alert(`${userState.accountId}의 가입이 완료되었습니다.`);
       setOnSignUp(false);
     } catch (e) {
-      if (e.response.data.status === 500) {
-        window.alert("중복된 Account ID 입니다. 다시 입력해주세요.");
-      } else {
-        console.log(e);
-      }
+      console.log(e);
     }
   };
 
