@@ -10,6 +10,7 @@ function App() {
 
   return (
     <>
+      <h1>User 통신</h1>
       <button onClick={() => setOnSignUp(true)}>Sign Up</button>
       {onSignUp && (
         <SignUpModal
