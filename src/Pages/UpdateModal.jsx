@@ -151,7 +151,7 @@ const UpdateModal = ({
           <InputBox
             name="accountId"
             value={updateUserState.accountId}
-            onChange={onChangeHandler}
+            readOnly
           />
         </TextBox>
         <TextBox>
