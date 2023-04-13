@@ -21,9 +21,11 @@ const Table = styled.div`
   }
 `;
 
-const GetOneUser = () => {
-  const [user, setUser] = useState();
+const GetSearchUser = () => {
+  const [searchUserList, setSearchUserList] = useState();
   const [value, setValue] = useState("");
+
+  console.log("searchUserList: ", searchUserList);
 
   const onChangeHandler = (event) => {
     const { value } = event.target;
@@ -36,15 +38,16 @@ const GetOneUser = () => {
       return;
     }
 
-    getOneUser();
+    getSearchUser();
   };
 
-  const getOneUser = async () => {
+  const getSearchUser = async () => {
     try {
+      console.log("value: ", value);
       const { data } = await axios.get(
         `${process.env.REACT_APP_URL}/user/${value}`
       );
-      setUser(data);
+      setSearchUserList(data);
     } catch (e) {
       console.log(e);
     }
@@ -70,15 +73,17 @@ const GetOneUser = () => {
           <span>NAME</span>
           <span>AGE</span>
         </Table>
-        <Table>
-          <span>{user?.id}</span>
-          <span>{user?.accountId}</span>
-          <span>{user?.name}</span>
-          <span>{user?.age}</span>
-        </Table>
+        {searchUserList?.map((user, index) => (
+          <Table key={index}>
+            <span>{user?.id}</span>
+            <span>{user?.accountId}</span>
+            <span>{user?.name}</span>
+            <span>{user?.age}</span>
+          </Table>
+        ))}
       </UserListBox>
     </Wrapper>
   );
 };
 
-export default GetOneUser;
+export default GetSearchUser;

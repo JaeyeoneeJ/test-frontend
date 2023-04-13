@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import GetOneUser from "./Pages/GetOneUser";
+import GetSearchUser from "./Pages/GetSearchUser";
 import UserList from "./Pages/UserList";
 import SignUpModal from "./Pages/SignUpModal";
 
@@ -19,7 +19,7 @@ function App() {
           setOnSignUp={setOnSignUp}
         />
       )}
-      <GetOneUser />
+      <GetSearchUser />
       <UserList userList={userList} setUserList={setUserList} />
     </>
   );
