@@ -10,7 +10,7 @@ function App() {
 
   return (
     <>
-      <h1>User 통신</h1>
+      <h1>Naver Cloud Platform 연동</h1>
       <button onClick={() => setOnSignUp(true)}>Sign Up</button>
       {onSignUp && (
         <SignUpModal
