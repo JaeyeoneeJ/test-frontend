@@ -65,6 +65,7 @@ const SignUpModal = ({ setOnSignUp, userList, setUserList }) => {
       userState.username.trim() === "" ||
       userState.age.trim() === ""
     ) {
+      window.alert("모든 항목을 입력해주세요.");
       return;
     }
 
@@ -92,6 +93,11 @@ const SignUpModal = ({ setOnSignUp, userList, setUserList }) => {
       if (e.response.data.status === 500) {
         console.log(e);
         window.alert("중복된 Account ID 입니다. 다시 입력해주세요.");
+      } else if (e.response.data.status === 400) {
+        console.log(e);
+        window.alert(
+          "Account ID는 6자 이상, 16자 이하의 영문과 숫자 조합만 가능합니다."
+        );
       } else {
         console.log(e);
       }
