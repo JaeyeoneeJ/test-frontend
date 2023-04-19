@@ -24,6 +24,7 @@ const Table = styled.table`
 const VideoPlayer = styled.video``;
 
 const GoToVideo = () => {
+  // vercel 배포용
   const navigate = useNavigate();
 
   const videoRef = useRef(null);
