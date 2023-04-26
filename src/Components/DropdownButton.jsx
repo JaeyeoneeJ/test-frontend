@@ -63,21 +63,19 @@ const DropdownButton = ({
     setIsOpen(false);
     if (option === "ko") {
       setVoiceUrl(
-        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.voiceKr}`
+        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/streamingFile/ko/${videoInfo.title}_ko.m3u8`
       );
     } else if (option === "en") {
       setVoiceUrl(
-        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.voiceEn}`
+        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/streamingFile/en/${videoInfo.title}_en.m3u8`
       );
     } else if (option === "thai") {
       setVoiceUrl(
-        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.voiceThai}`
+        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/streamingFile/thai/${videoInfo.title}_thai.m3u8`
       );
     } else {
       alert("올바르지 않은 언어 팩이 감지되었습니다.");
     }
-
-    console.log(option);
   };
 
   //   process.env.REACT_APP_URL_S3;

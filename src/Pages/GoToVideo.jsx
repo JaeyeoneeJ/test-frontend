@@ -4,6 +4,7 @@ import { videoInfoAtom } from "../recoil/atoms/atoms";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import DropdownButton from "../Components/DropdownButton";
+import ReactPlayer from "react-player";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -21,89 +22,82 @@ const SubTitle = styled.h2`
 const Table = styled.table`
   margin: 0 auto;
 `;
-const VideoPlayer = styled.video``;
+const DivCenter = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+`;
 
 const GoToVideo = () => {
-  // vercel 배포용
   const navigate = useNavigate();
 
   const videoRef = useRef(null);
-  const bgRef = useRef(null);
   const voiceRef = useRef(null);
+  const [videoUrl, setVideoUrl] = useState();
   const [voiceUrl, setVoiceUrl] = useState();
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   console.log("재생 위치: ", videoCurrentTime);
-  console.log("voiceUrl: ", voiceUrl);
+
   const videoInfo = useRecoilValue(videoInfoAtom);
-  console.log("videoInfo: ", videoInfo);
+
+  const [playing, setPlaying] = useState(false);
+  console.log("voiceRef playing status: ", playing);
 
   const handleVideoPause = () => {
-    bgRef.current.pause();
-    voiceRef.current.pause();
-    setVideoCurrentTime(videoRef.current?.currentTime);
+    setPlaying(false);
+    videoRef.current?.getInternalPlayer()?.pause();
+    voiceRef.current?.getInternalPlayer()?.pause();
   };
 
   const handleVideoPlay = () => {
-    bgRef.current.pause();
-    voiceRef.current.pause();
-    bgRef.current.currentTime = videoRef.current?.currentTime;
-    voiceRef.current.currentTime = videoRef.current?.currentTime;
-    bgRef.current.play();
-    voiceRef.current.play();
-    setVideoCurrentTime(videoRef.current?.currentTime);
+    setPlaying(true);
+    videoRef.current?.getInternalPlayer()?.play();
+    voiceRef.current?.getInternalPlayer()?.play();
   };
 
   useEffect(() => {
-    // defaultLanguage 주입
-    !voiceUrl &&
-      videoInfo &&
-      setVoiceUrl(
-        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.voiceKr}`
+    videoInfo &&
+      setVideoUrl(
+        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/streamingFile/video/${videoInfo.title}.m3u8`
       );
-    if (voiceUrl && videoInfo) {
-      voiceRef.current.currentTime = videoRef.current?.currentTime;
-    }
-  }, [videoInfo, voiceUrl]);
+  }, [videoInfo]);
 
   useEffect(() => {
-    if (
-      videoInfo &&
-      videoRef.current &&
-      videoRef.current !== null &&
-      videoRef.current !== undefined
-    ) {
-      videoRef.current.pause();
-      videoRef.current.play();
-      setVideoCurrentTime(videoRef.current.currentTime);
+    // defaultLanguage 주입
+    if (!voiceUrl && videoInfo) {
+      setVoiceUrl(
+        `${process.env.REACT_APP_URL_S3}/${videoInfo.title}/streamingFile/ko/${videoInfo.title}_ko.m3u8`
+      );
     }
-  }, [videoInfo, videoRef]);
+  }, [videoInfo, voiceUrl, videoUrl]);
 
   useEffect(() => {
-    if (
-      videoInfo &&
-      bgRef.current &&
-      bgRef.current !== null &&
-      bgRef.current !== undefined &&
-      videoRef.current.play()
-    ) {
-      bgRef.current.pause();
-      bgRef.current.play();
-    }
-  }, [videoInfo, videoRef, bgRef]);
+    voiceRef.current && voiceRef.current?.getCurrentTime(0);
+  }, [voiceRef.current]);
 
   useEffect(() => {
-    if (
-      videoInfo &&
-      voiceUrl &&
-      voiceRef.current &&
-      voiceRef.current !== null &&
-      voiceRef.current !== undefined &&
-      videoRef.current.play()
-    ) {
-      voiceRef.current.pause();
-      voiceRef.current.play();
-    }
-  }, [voiceUrl, videoInfo, videoRef, voiceRef]);
+    const handleTimeUpdate = () => {
+      const currentTime = videoRef.current?.getCurrentTime();
+      console.log("currentTime: ", currentTime);
+
+      if (currentTime !== null) {
+        console.log("seek To ing...");
+        voiceRef.current?.seekTo(currentTime);
+      }
+    };
+
+    videoRef.current
+      ?.getInternalPlayer()
+      ?.addEventListener("timeupdate", handleTimeUpdate);
+
+    return () => {
+      videoRef.current
+        ?.getInternalPlayer()
+        ?.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, [videoRef.current, voiceRef.current]);
 
   return videoInfo ? (
     <Wrapper>
@@ -114,10 +108,10 @@ const GoToVideo = () => {
             <th style={{ padding: "10px" }}>ID</th>
             <th style={{ padding: "10px" }}>Title</th>
             <th style={{ padding: "10px" }}>Video</th>
-            <th style={{ padding: "10px" }}>Voice Kr</th>
+            <th style={{ padding: "10px" }}>Voice Ko</th>
             <th style={{ padding: "10px" }}>Voice En</th>
             <th style={{ padding: "10px" }}>Voice Thai</th>
-            <th style={{ padding: "10px" }}>BG</th>
+            <th style={{ padding: "10px" }}>BGM</th>
           </tr>
         </thead>
         <tbody>
@@ -132,7 +126,7 @@ const GoToVideo = () => {
               {videoInfo.video ? "O" : "X"}
             </td>
             <td style={{ padding: "10px", textAlign: "center" }}>
-              {videoInfo.voiceKr ? "O" : "X"}
+              {videoInfo.voiceKo ? "O" : "X"}
             </td>
             <td style={{ padding: "10px", textAlign: "center" }}>
               {videoInfo.voiceEn ? "O" : "X"}
@@ -141,38 +135,40 @@ const GoToVideo = () => {
               {videoInfo.voiceThai ? "O" : "X"}
             </td>
             <td style={{ padding: "10px", textAlign: "center" }}>
-              {videoInfo.bg ? "O" : "X"}
+              {videoInfo.bgm ? "O" : "X"}
             </td>
           </tr>
         </tbody>
       </Table>
       <SubTitle>Player</SubTitle>
-      <VideoPlayer
-        ref={videoRef}
-        controls
-        src={`${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.video}`}
-        width={640}
-        height={"auto"}
-        muted
-        onPause={handleVideoPause}
-        onPlay={handleVideoPlay}
-      />
-      {/* choose to Language */}
-      <DropdownButton
-        options={["ko", "en", "thai"]}
-        defaultLanguage={"ko"}
-        setVoiceUrl={setVoiceUrl}
-        videoInfo={videoInfo}
-      />
-      {/* background music */}
-      <div>
-        <audio
+      <DivCenter>
+        <ReactPlayer
+          ref={videoRef}
           controls
-          ref={bgRef}
-          src={`${process.env.REACT_APP_URL_S3}/${videoInfo.title}/${videoInfo.bg}`}
+          url={videoUrl}
+          width={640}
+          height={"auto"}
+          muted
+          playing={playing}
+          onPause={handleVideoPause}
+          onPlay={handleVideoPlay}
         />
-        <audio controls ref={voiceRef} src={voiceUrl} />
-      </div>
+        {/* choose to Language */}
+        <DropdownButton
+          options={["ko", "en", "thai"]}
+          defaultLanguage={"ko"}
+          setVoiceUrl={setVoiceUrl}
+          videoInfo={videoInfo}
+        />
+        {/* background music */}
+        <ReactPlayer
+          height={50}
+          ref={voiceRef}
+          controls
+          url={voiceUrl}
+          playing={playing}
+        />
+      </DivCenter>
     </Wrapper>
   ) : (
     <>

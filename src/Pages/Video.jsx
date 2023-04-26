@@ -78,10 +78,10 @@ const Video = () => {
             <th style={{ padding: "10px" }}>ID</th>
             <th style={{ padding: "10px" }}>Title</th>
             <th style={{ padding: "10px" }}>Video</th>
-            <th style={{ padding: "10px" }}>Voice Kr</th>
+            <th style={{ padding: "10px" }}>Voice Ko</th>
             <th style={{ padding: "10px" }}>Voice En</th>
             <th style={{ padding: "10px" }}>Voice Thai</th>
-            <th style={{ padding: "10px" }}>BG</th>
+            <th style={{ padding: "10px" }}>BGM</th>
             <th style={{ padding: "10px" }}>Go To Video</th>
           </tr>
         </thead>
@@ -104,7 +104,7 @@ const Video = () => {
                 {item.video ? "O" : "X"}
               </td>
               <td style={{ padding: "10px", textAlign: "center" }}>
-                {item.voiceKr ? "O" : "X"}
+                {item.voiceKo ? "O" : "X"}
               </td>
               <td style={{ padding: "10px", textAlign: "center" }}>
                 {item.voiceEn ? "O" : "X"}
@@ -113,7 +113,7 @@ const Video = () => {
                 {item.voiceThai ? "O" : "X"}
               </td>
               <td style={{ padding: "10px", textAlign: "center" }}>
-                {item.bg ? "O" : "X"}
+                {item.bgm ? "O" : "X"}
               </td>
               <td
                 style={{
