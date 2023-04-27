@@ -152,6 +152,7 @@ const GoToVideo = () => {
           playing={playing}
           onPause={handleVideoPause}
           onPlay={handleVideoPlay}
+          crossOrigin="anonymous"
         />
         {/* choose to Language */}
         <DropdownButton
@@ -167,6 +168,7 @@ const GoToVideo = () => {
           controls
           url={voiceUrl}
           playing={playing}
+          crossOrigin="anonymous"
         />
       </DivCenter>
     </Wrapper>
